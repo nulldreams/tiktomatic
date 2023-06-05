@@ -1,0 +1,9 @@
+{
+  "name": "tiktomatic",
+  "version": "1.0.0",
+  "description": "Projeto que cria um fluxo automatizado de criação, produção e publicação de vídeos no tiktok.",
+  "main": "bootstrap.ts",
+  "repository": "https://github.com/nulldreams/tiktomatic",
+  "author": "nulldreams",
+  "license": "MIT"
+}
