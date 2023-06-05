@@ -6,12 +6,17 @@ parser = argparse.ArgumentParser(description="Just an example", formatter_class=
 
 parser.add_argument("-t", "--text", help="text to speech")
 parser.add_argument("-n", "--name", help="file name")
+parser.add_argument("-tr", "--translate", help="translated text?")
 
 VOICE_BR = "Microsoft Server Speech Text to Speech Voice (pt-BR, AntonioNeural)"
 VOICE_EN = "Microsoft Server Speech Text to Speech Voice (en-US, ChristopherNeural)"
 
-def get_voice():
-    choicedVoice = VOICE_EN
+def get_voice(translate):
+    if (translate == 'True'):
+        choicedVoice = VOICE_BR
+    else:
+        choicedVoice = VOICE_EN
+
     return choicedVoice
 
 async def generate(text,name,voice):
@@ -26,11 +31,10 @@ async def generate(text,name,voice):
         raise error
 
 async def main():
-    voice = get_voice()
     args = parser.parse_args()
     config = vars(args)
 
+    voice = get_voice(config["translate"])
     await generate(config["text"], config["name"], voice)
-    print('finished')
 
 asyncio.run(main())
