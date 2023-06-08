@@ -1,2 +1,5 @@
 node_modules/*
 output/*
+*.mp3
+*.mp4
+*.png
