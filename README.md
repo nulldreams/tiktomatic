@@ -6,5 +6,9 @@ Projeto que cria um fluxo automatizado de criação, produção e publicação d
 
 - [x] Scrap Reddit
 - [x] Generate Voice Clips
-- [ ] Generate Video With Voice Clips
+- [x] Generate Video With Voice Clips
 - [ ] Publish on Tiktok
+
+- Features
+- [x] Remove previous post images and voices
+- [ ] Create base folders

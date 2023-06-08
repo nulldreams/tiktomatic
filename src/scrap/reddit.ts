@@ -1,6 +1,7 @@
+import cliProgress from 'cli-progress'
 import { PostContent } from './interfaces'
-
 import puppeteer, { Page } from 'puppeteer'
+import { success, info } from '../utils/log'
 
 const POST_TAG_NAME = 'shreddit-post'
 const POST_TITLE_CLASS_NAME = '.text-neutral-content-strong'
@@ -38,13 +39,15 @@ const handlePostComments = async (page: Page, postsLimit: number) => {
     let commentTag = await element.$('.max-w-full')
     const commentText = await page.evaluate((el) => el.textContent, commentTag)
     comments.push(commentText.trim())
-    await element.screenshot({ path: `./output/post-${index}.png` })
+    await element.screenshot({ path: `./output/${index}.png` })
   }
 
   return comments
 }
 
 export const getPostContent = async (url: string, postsLimit: number): Promise<PostContent> => {
+  info('scrapping post')
+
   const browser = await puppeteer.launch({ headless: 'new' })
 
   const page = await browser.newPage()
@@ -52,17 +55,19 @@ export const getPostContent = async (url: string, postsLimit: number): Promise<P
 
   await page.goto(url)
 
-  console.log('Scrap Screenshot - Post Title')
+  success('screenshot post')
   const postTitle = await handlePostTitle(page)
 
-  console.log('Scrap Screenshot - Post Comments')
+  success('screenshot post comments')
   const comments = await handlePostComments(page, postsLimit)
 
   await browser.close()
 
-  console.log('Scrap Screenshot - Done')
+  const splitedURL = url.split('/')
 
+  success('scrapping post')
   return {
+    slug: splitedURL[splitedURL.length - 2],
     title: postTitle,
     comments,
   }
