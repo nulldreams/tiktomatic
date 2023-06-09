@@ -2,6 +2,7 @@ import cliProgress from 'cli-progress'
 import { PostContent } from './interfaces'
 import puppeteer, { Page } from 'puppeteer'
 import { success, info } from '../utils/log'
+import { randomInt } from 'crypto'
 
 const POST_TAG_NAME = 'shreddit-post'
 const POST_TITLE_CLASS_NAME = '.text-neutral-content-strong'
@@ -71,4 +72,14 @@ export const getPostContent = async (url: string, postsLimit: number): Promise<P
     title: postTitle,
     comments,
   }
+}
+
+export const chooseOnePost = async () => {
+  const response = await fetch('https://www.reddit.com/r/AskReddit/top.json?t=day&limit=30')
+  const responseData = await response.json()
+  const posts = responseData.data.children
+
+  const safePosts = posts.filter((post) => post.data.whitelist_status !== 'nsfw' && !post.data.over_18)
+
+  return safePosts[randomInt(0, safePosts.length - 1)].data
 }

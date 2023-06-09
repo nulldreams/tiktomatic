@@ -1,23 +1,35 @@
 import { generateVoices } from './voice'
-import { getPostContent } from './scrap/reddit'
+import { chooseOnePost, getPostContent } from './scrap/reddit'
 import { cleanDirectory } from './utils/io'
 import { generateVideo } from './video'
+import { upload } from './upload/tiktok'
+import { error } from './utils/log'
 
-const POST_URL = 'https://www.reddit.com/r/AskReddit/comments/141elrw/what_is_the_greatest_fight_scene_of_all_time/'
-const POST_COUNT = 1
+const SESSION_ID = 'a4f38facc3c3df069daf9c5f69bc5dad'
+const TAGS = ['reddit', 'story']
+const POST_COUNT = 5
 const TRANSLATE_TO_BR = false
 
 const main = async () => {
   try {
+    const post = await chooseOnePost()
     await cleanDirectory('./output')
-    const postContent = await getPostContent(POST_URL, POST_COUNT)
+    const postContent = await getPostContent(post.url, POST_COUNT)
     await generateVoices(postContent, TRANSLATE_TO_BR)
 
     await delay(2000)
 
     await generateVideo(postContent.slug)
-  } catch (error) {
-    console.log(error)
+
+    const videoData = {
+      path: `render/${postContent.slug}.mp4`,
+      tags: TAGS,
+      title: postContent.title,
+    }
+
+    await upload(videoData, SESSION_ID)
+  } catch (err) {
+    error(err)
   }
 }
 

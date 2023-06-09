@@ -10,3 +10,9 @@ export const cleanDirectory = async (directory: string) => {
   }
   success('removing old output files')
 }
+
+export const sizeOfFile = async (filepath: string) => {
+  const fileStats = await fs.statSync(filepath)
+
+  return fileStats.size
+}
